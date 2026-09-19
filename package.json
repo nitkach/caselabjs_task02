@@ -1,17 +1,32 @@
 {
   "name": "task_02",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Simple TypeScript API skeleton with middleware, validation, logging and error handling",
+  "main": "dist/server.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "test": "echo \"No tests configured yet\""
   },
-  "keywords": [],
+  "keywords": [
+    "typescript",
+    "express",
+    "middleware",
+    "validation"
+  ],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "express": "^5.1.0",
+    "zod": "^4.0.0"
+  },
   "devDependencies": {
+    "@types/express": "^5.0.0",
     "@types/node": "^26.6.2",
-    "typescript": "^7.0.2"
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.2"
   }
 }
