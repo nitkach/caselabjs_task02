@@ -10,6 +10,7 @@ import type {
     UpdateMaintenanceRequestInput,
     UpdateMaintenanceRequestStatusInput,
 } from "../schemas/maintenanceRequest.schema.js";
+import type { MaintenanceRequestListQuery } from "../schemas/list.schema.js";
 import { AppError } from "../utils/appError.js";
 
 export class MaintenanceRequestService {
@@ -17,8 +18,40 @@ export class MaintenanceRequestService {
         private readonly equipmentRepo: EquipmentRepository = equipmentRepository,
         private readonly maintenanceRequestRepo: MaintenanceRequestRepository = maintenanceRequestRepository,
     ) { }
-    findAll(): MaintenanceRequest[] {
-        return this.maintenanceRequestRepo.findAll();
+    findAll(query?: MaintenanceRequestListQuery): {
+        data: MaintenanceRequest[];
+        meta: { total: number; page: number; limit: number };
+    } {
+        const options = query ?? {
+            page: 1,
+            limit: 20,
+            sortBy: "createdAt" as const,
+            sortOrder: "asc" as const,
+        };
+        let items = this.maintenanceRequestRepo.findAll();
+
+        if (options.status) items = items.filter((item) => item.status === options.status);
+        if (options.priority) items = items.filter((item) => item.priority === options.priority);
+        if (options.equipmentId) items = items.filter((item) => item.equipmentId === options.equipmentId);
+        if (options.createdFrom) items = items.filter((item) => item.createdAt >= options.createdFrom!);
+        if (options.createdTo) items = items.filter((item) => item.createdAt <= options.createdTo!);
+        if (options.plannedFrom) items = items.filter((item) => item.plannedAt !== undefined && item.plannedAt >= options.plannedFrom!);
+        if (options.plannedTo) items = items.filter((item) => item.plannedAt !== undefined && item.plannedAt <= options.plannedTo!);
+
+        const direction = options.sortOrder === "asc" ? 1 : -1;
+        items.sort((left, right) => {
+            const leftValue = left[options.sortBy] ?? "";
+            const rightValue = right[options.sortBy] ?? "";
+            return String(leftValue).localeCompare(String(rightValue)) * direction;
+        });
+
+        const total = items.length;
+        const start = (options.page - 1) * options.limit;
+
+        return {
+            data: items.slice(start, start + options.limit),
+            meta: { total, page: options.page, limit: options.limit },
+        };
     }
 
     findById(id: string): MaintenanceRequest {

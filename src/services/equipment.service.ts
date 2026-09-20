@@ -8,6 +8,7 @@ import { EquipmentRepository, equipmentRepository } from "../repositories/equipm
 import { MaintenanceRequestRepository, maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
 import { AppError } from "../utils/appError.js";
 import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
+import type { EquipmentListQuery } from "../schemas/list.schema.js";
 
 export class EquipmentService {
     constructor(
@@ -15,8 +16,37 @@ export class EquipmentService {
         private readonly maintenanceRequestRepo: MaintenanceRequestRepository = maintenanceRequestRepository,
     ) { }
 
-    findAll(): Equipment[] {
-        return this.equipmentRepo.findAll();
+    findAll(query?: EquipmentListQuery): {
+        data: Equipment[];
+        meta: { total: number; page: number; limit: number };
+    } {
+        const options = query ?? {
+            page: 1,
+            limit: 20,
+            sortBy: "name" as const,
+            sortOrder: "asc" as const,
+        };
+        let items = this.equipmentRepo.findAll();
+
+        if (options.status) items = items.filter((item) => item.status === options.status);
+        if (options.type) items = items.filter((item) => item.type === options.type);
+        if (options.installedFrom) items = items.filter((item) => item.installedAt >= options.installedFrom!);
+        if (options.installedTo) items = items.filter((item) => item.installedAt <= options.installedTo!);
+
+        const direction = options.sortOrder === "asc" ? 1 : -1;
+        items.sort((left, right) => {
+            const leftValue = left[options.sortBy];
+            const rightValue = right[options.sortBy];
+            return String(leftValue).localeCompare(String(rightValue)) * direction;
+        });
+
+        const total = items.length;
+        const start = (options.page - 1) * options.limit;
+
+        return {
+            data: items.slice(start, start + options.limit),
+            meta: { total, page: options.page, limit: options.limit },
+        };
     }
 
     findById(id: string): Equipment {
