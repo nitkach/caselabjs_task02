@@ -5,6 +5,7 @@ import {
     getMaintenanceRequest,
     patchMaintenanceRequest,
     patchMaintenanceRequestStatus,
+    deleteMaintenanceRequest,
 } from "../controllers/maintenanceRequest.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
 import {
@@ -34,4 +35,9 @@ maintenanceRequestRouter.patch(
     "/requests/:id/status",
     validateRequest(updateMaintenanceRequestStatusSchema),
     patchMaintenanceRequestStatus,
+);
+
+maintenanceRequestRouter.delete(
+    "/requests/:id",
+    deleteMaintenanceRequest
 );

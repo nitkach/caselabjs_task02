@@ -61,3 +61,13 @@ export function patchMaintenanceRequestStatus(
         data: maintenanceRequest,
     });
 }
+
+
+export function deleteMaintenanceRequest(req: Request<{ id: string }>, res: Response<unknown>): void {
+    const maintenanceRequest = maintenanceRequestService.delete(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        data: maintenanceRequest,
+    });
+}
