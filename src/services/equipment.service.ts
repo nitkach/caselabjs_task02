@@ -38,10 +38,27 @@ export class EquipmentService {
         });
     }
 
-    update(input: UpdateEquipmentInput): Equipment {
-        return this.repository.update({
-            ...input
-        })
+    update(id: string, input: UpdateEquipmentInput): Equipment {
+        const current = this.findById(id);
+
+        if (
+            input.serialNumber !== undefined &&
+            input.serialNumber !== current.serialNumber
+        ) {
+            const duplicate = this.repository.findBySerialNumber(input.serialNumber);
+
+            if (duplicate && duplicate.id !== id) {
+                throw new AppError(409, "Serial number is already in use");
+            }
+        }
+
+        const updated = this.repository.update(id, input);
+
+        if (!updated) {
+            throw new AppError(404, "Equipment not found");
+        }
+
+        return updated;
     }
 }
 

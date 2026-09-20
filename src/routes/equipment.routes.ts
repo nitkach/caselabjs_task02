@@ -7,7 +7,10 @@ import {
     patchEquipment,
 } from "../controllers/equipment.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
-import { createEquipmentSchema } from "../schemas/equipment.schema.js";
+import {
+    createEquipmentSchema,
+    updateEquipmentSchema,
+} from "../schemas/equipment.schema.js";
 
 export const equipmentRouter = Router();
 
@@ -21,4 +24,8 @@ equipmentRouter.post(
 
 equipmentRouter.get("/equipment/:id", getEquipment);
 
-equipmentRouter.patch("/equipment/:id", patchEquipment);
+equipmentRouter.patch(
+    "/equipment/:id",
+    validateRequest(updateEquipmentSchema),
+    patchEquipment,
+);

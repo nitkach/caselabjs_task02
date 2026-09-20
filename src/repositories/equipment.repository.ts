@@ -21,6 +21,23 @@ export class EquipmentRepository {
         this.equipment.set(item.id, item);
         return item;
     }
+
+    update(id: string, changes: Partial<Equipment>): Equipment | undefined {
+        const current = this.equipment.get(id);
+
+        if (!current) {
+            return undefined;
+        }
+
+        const updated = {
+            ...current,
+            ...changes,
+            id: current.id,
+        };
+
+        this.equipment.set(id, updated);
+        return updated;
+    }
 }
 
 export const equipmentRepository = new EquipmentRepository();

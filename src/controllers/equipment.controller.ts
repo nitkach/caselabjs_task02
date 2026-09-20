@@ -1,4 +1,4 @@
-import type { Request, Response, RequestHandler } from "express";
+import type { Request, Response } from "express";
 
 import type { CreateEquipmentInput, UpdateEquipmentInput } from "../models/equipment.model.js";
 import { equipmentService } from "../services/equipment.service.js";
@@ -33,9 +33,9 @@ export function patchEquipment(
     req: Request<{ id: string }, unknown, UpdateEquipmentInput>,
     res: Response<unknown>
 ): void {
-    const equipment = equipmentService.update(req.body);
+    const equipment = equipmentService.update(req.params.id, req.body);
 
-    res.status(201).json({
+    res.status(200).json({
         success: true,
         data: equipment,
     });
