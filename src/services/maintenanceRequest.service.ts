@@ -112,6 +112,17 @@ export class MaintenanceRequestService {
 
         return updated;
     }
+
+    delete(id: string): MaintenanceRequest {
+        this.findById(id);
+        const deletedRequest = this.maintenanceRequestRepo.delete(id);
+
+        if (!deletedRequest) {
+            throw new AppError(404, "Maintenance request not found");
+        }
+
+        return deletedRequest;
+    }
 }
 
 export const maintenanceRequestService = new MaintenanceRequestService();

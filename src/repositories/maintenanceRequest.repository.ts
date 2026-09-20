@@ -50,6 +50,17 @@ export class MaintenanceRequestRepository {
                 (request.status === "new" || request.status === "in_progress"),
         );
     }
+
+    delete(id: string): MaintenanceRequest | undefined {
+        const current = this.maintenanceRequests.get(id);
+
+        if (!current) {
+            return undefined;
+        }
+
+        this.maintenanceRequests.delete(id);
+        return current;
+    }
 }
 
 export const maintenanceRequestRepository = new MaintenanceRequestRepository();
