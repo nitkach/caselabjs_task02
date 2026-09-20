@@ -4,6 +4,7 @@ import {
     createEquipment,
     getEquipment,
     listEquipment,
+    patchEquipment,
 } from "../controllers/equipment.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
 import { createEquipmentSchema } from "../schemas/equipment.schema.js";
@@ -19,3 +20,5 @@ equipmentRouter.post(
 );
 
 equipmentRouter.get("/equipment/:id", getEquipment);
+
+equipmentRouter.patch("/equipment/:id", patchEquipment);

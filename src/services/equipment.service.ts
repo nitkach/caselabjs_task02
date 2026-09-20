@@ -6,11 +6,12 @@ import type {
 } from "../models/equipment.model.js";
 import { equipmentRepository } from "../repositories/equipment.repository.js";
 import { AppError } from "../utils/appError.js";
+import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 
 export class EquipmentService {
     constructor(
         private readonly repository = equipmentRepository,
-    ) {}
+    ) { }
 
     findAll(): Equipment[] {
         return this.repository.findAll();
@@ -35,6 +36,12 @@ export class EquipmentService {
             id: randomUUID(),
             ...input,
         });
+    }
+
+    update(input: UpdateEquipmentInput): Equipment {
+        return this.repository.update({
+            ...input
+        })
     }
 }
 
