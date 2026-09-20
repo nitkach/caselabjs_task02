@@ -1,6 +1,7 @@
 import express from "express";
 
 import { requestLogger } from "./middleware/requestLogger.js";
+import { requestId } from "./middleware/requestId.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFoundHandler } from "./middleware/notFoundHandler.js";
 import { equipmentRouter } from "./routes/equipment.routes.js";
@@ -8,6 +9,7 @@ import { maintenanceRequestRouter } from "./routes/maintenanceRequest.routes.js"
 
 export const app = express();
 
+app.use(requestId);
 app.use(express.json());
 app.use(requestLogger);
 

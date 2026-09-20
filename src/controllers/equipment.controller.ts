@@ -5,12 +5,12 @@ import { equipmentService } from "../services/equipment.service.js";
 import { maintenanceRequestService } from "../services/maintenanceRequest.service.js";
 import { weatherService } from "../services/weather.service.js";
 import { equipmentListQuerySchema } from "../schemas/list.schema.js";
-import { AppError } from "../utils/appError.js";
+import { ValidationError } from "../errors/appError.js";
 
 export function listEquipment(req: Request, res: Response): void {
     const parsed = equipmentListQuerySchema.safeParse(req.query);
     if (!parsed.success) {
-        throw new AppError(400, "Invalid equipment list query");
+        throw new ValidationError("Invalid equipment list query");
     }
 
     res.json({

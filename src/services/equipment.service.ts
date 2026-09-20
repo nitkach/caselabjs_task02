@@ -6,7 +6,7 @@ import type {
 } from "../models/equipment.model.js";
 import { EquipmentRepository, equipmentRepository } from "../repositories/equipment.repository.js";
 import { MaintenanceRequestRepository, maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
-import { AppError } from "../utils/appError.js";
+import { ConflictError, NotFoundError } from "../errors/appError.js";
 import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 import type { EquipmentListQuery } from "../schemas/list.schema.js";
 
@@ -53,7 +53,7 @@ export class EquipmentService {
         const equipment = this.equipmentRepo.findById(id);
 
         if (!equipment) {
-            throw new AppError(404, "Equipment not found");
+            throw new NotFoundError("Equipment not found");
         }
 
         return equipment;
@@ -61,7 +61,7 @@ export class EquipmentService {
 
     create(input: CreateEquipmentInput): Equipment {
         if (this.equipmentRepo.findBySerialNumber(input.serialNumber)) {
-            throw new AppError(409, "Serial number is already in use");
+            throw new ConflictError("Serial number is already in use");
         }
 
         return this.equipmentRepo.create({
@@ -80,14 +80,14 @@ export class EquipmentService {
             const duplicate = this.equipmentRepo.findBySerialNumber(input.serialNumber);
 
             if (duplicate && duplicate.id !== id) {
-                throw new AppError(409, "Serial number is already in use");
+                throw new ConflictError("Serial number is already in use");
             }
         }
 
         const updated = this.equipmentRepo.update(id, input);
 
         if (!updated) {
-            throw new AppError(404, "Equipment not found");
+            throw new NotFoundError("Equipment not found");
         }
 
         return updated;
@@ -99,7 +99,7 @@ export class EquipmentService {
             this.maintenanceRequestRepo.hasOpenByEquipmentId(id);
 
         if (hasOpenMaintenanceRequest) {
-            throw new AppError(409, "Equipment has open maintenance requests");
+            throw new ConflictError("Equipment has open maintenance requests");
         }
 
         this.equipmentRepo.delete(id);
