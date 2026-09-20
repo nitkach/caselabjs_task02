@@ -8,7 +8,14 @@ export class MaintenanceRequestRepository {
     }
 
     findByEquipmentId(equipmentId: string): MaintenanceRequest[] {
-        return [...this.maintenanceRequests.values()].filter(request => request.equipmentId === equipmentId)
+        return [...this.maintenanceRequests.values()].filter(
+            (request) => request.equipmentId === equipmentId,
+        );
+    }
+
+    create(request: MaintenanceRequest): MaintenanceRequest {
+        this.maintenanceRequests.set(request.id, request);
+        return request;
     }
 
     hasOpenByEquipmentId(equipmentId: string): boolean {

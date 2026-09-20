@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import type {
     MaintenanceRequest,
 } from "../models/maintenanceRequest.model.js";
@@ -13,13 +15,28 @@ export class MaintenanceRequestService {
     ) { }
 
     create(input: CreateMaintenanceRequestInput): MaintenanceRequest {
-        if (this.equipmentRepo.findBySerialNumber(input.serialNumber)) {
-            throw new AppError(409, "Serial number is already in use");
+        const equipment = this.equipmentRepo.findById(input.equipmentId);
+
+        if (!equipment) {
+            throw new AppError(404, "Equipment not found");
         }
 
-        return this.equipmentRepo.create({
+        const now = new Date().toISOString();
+
+        return this.maintenanceRequestRepo.create({
             id: randomUUID(),
-            ...input,
+            equipmentId: equipment.id,
+            title: input.title,
+            ...(input.description === undefined
+                ? {}
+                : { description: input.description }),
+            priority: input.priority,
+            status: "new",
+            ...(input.plannedAt === undefined
+                ? {}
+                : { plannedAt: input.plannedAt }),
+            createdAt: now,
+            updatedAt: now,
         });
     }
 
