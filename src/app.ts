@@ -4,6 +4,7 @@ import { requestLogger } from "./middleware/requestLogger.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import { notFoundHandler } from "./middleware/notFoundHandler.js";
 import { equipmentRouter } from "./routes/equipment.routes.js";
+import { maintenanceRequestRouter } from "./routes/maintenanceRequest.routes.js";
 import { usersRouter } from "./routes/users.js";
 
 export const app = express();
@@ -20,6 +21,7 @@ app.get("/api/health", (_req, res) => {
 
 app.use("/api", usersRouter);
 app.use("/api", equipmentRouter);
+app.use("/api", maintenanceRequestRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

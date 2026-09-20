@@ -17,12 +17,12 @@ export interface Location {
 
 export interface MaintenanceRequest {
     id: string;
-    equipmentId: string
-    title: string,
-    description: string,
-    priority: MaintenanceRequestPriority,
-    status: MaintenanceRequestStatus,
-    plannedAt: string,
-    createdAt: string,
-    updatedAt: string,
+    equipmentId: string;
+    title: string;
+    description?: string;
+    priority: MaintenanceRequestPriority;
+    status: MaintenanceRequestStatus;
+    plannedAt?: string;
+    createdAt: string;
+    updatedAt: string;
 }
