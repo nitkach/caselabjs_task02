@@ -11,16 +11,16 @@ import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 
 export class EquipmentService {
     constructor(
-        private readonly repository: EquipmentRepository = equipmentRepository,
-        private readonly maintenanceRequestRepository: MaintenanceRequestRepository = maintenanceRequestRepository,
+        private readonly equipmentRepo: EquipmentRepository = equipmentRepository,
+        private readonly maintenanceRequestRepo: MaintenanceRequestRepository = maintenanceRequestRepository,
     ) { }
 
     findAll(): Equipment[] {
-        return this.repository.findAll();
+        return this.equipmentRepo.findAll();
     }
 
     findById(id: string): Equipment {
-        const equipment = this.repository.findById(id);
+        const equipment = this.equipmentRepo.findById(id);
 
         if (!equipment) {
             throw new AppError(404, "Equipment not found");
@@ -30,11 +30,11 @@ export class EquipmentService {
     }
 
     create(input: CreateEquipmentInput): Equipment {
-        if (this.repository.findBySerialNumber(input.serialNumber)) {
+        if (this.equipmentRepo.findBySerialNumber(input.serialNumber)) {
             throw new AppError(409, "Serial number is already in use");
         }
 
-        return this.repository.create({
+        return this.equipmentRepo.create({
             id: randomUUID(),
             ...input,
         });
@@ -47,14 +47,14 @@ export class EquipmentService {
             input.serialNumber !== undefined &&
             input.serialNumber !== current.serialNumber
         ) {
-            const duplicate = this.repository.findBySerialNumber(input.serialNumber);
+            const duplicate = this.equipmentRepo.findBySerialNumber(input.serialNumber);
 
             if (duplicate && duplicate.id !== id) {
                 throw new AppError(409, "Serial number is already in use");
             }
         }
 
-        const updated = this.repository.update(id, input);
+        const updated = this.equipmentRepo.update(id, input);
 
         if (!updated) {
             throw new AppError(404, "Equipment not found");
@@ -66,13 +66,13 @@ export class EquipmentService {
     delete(id: string): Equipment {
         const equipment = this.findById(id);
         const hasOpenMaintenanceRequest =
-            this.maintenanceRequestRepository.hasOpenByEquipmentId(id);
+            this.maintenanceRequestRepo.hasOpenByEquipmentId(id);
 
         if (hasOpenMaintenanceRequest) {
             throw new AppError(409, "Equipment has open maintenance requests");
         }
 
-        this.repository.delete(id);
+        this.equipmentRepo.delete(id);
 
         return equipment;
     }
