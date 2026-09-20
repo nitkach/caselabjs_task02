@@ -11,7 +11,7 @@ import type {
     UpdateMaintenanceRequestStatusInput,
 } from "../schemas/maintenanceRequest.schema.js";
 import type { MaintenanceRequestListQuery } from "../schemas/list.schema.js";
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 
 export class MaintenanceRequestService {
     constructor(

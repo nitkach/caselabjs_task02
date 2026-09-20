@@ -1,17 +1,17 @@
 import type { ErrorRequestHandler } from "express";
 
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  const statusCode = err instanceof AppError ? err.statusCode : 500;
-  const message = err instanceof Error ? err.message : "Internal server error";
+    const statusCode = err instanceof AppError ? err.statusCode : 500;
+    const message = err instanceof Error ? err.message : "Internal server error";
 
-  if (statusCode >= 500) {
-    console.error(err);
-  }
+    if (statusCode >= 500) {
+        console.error(err);
+    }
 
-  res.status(statusCode).json({
-    success: false,
-    error: message,
-  });
+    res.status(statusCode).json({
+        success: false,
+        error: message,
+    });
 };

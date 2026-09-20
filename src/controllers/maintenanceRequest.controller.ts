@@ -9,7 +9,7 @@ import type {
 import {
     maintenanceRequestListQuerySchema,
 } from "../schemas/list.schema.js";
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 
 export function listMaintenanceRequest(req: Request, res: Response): void {
     const parsed = maintenanceRequestListQuerySchema.safeParse(req.query);

@@ -1,6 +1,6 @@
 import { env } from "../config/env.js";
 import { equipmentService } from "./equipment.service.js";
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 
 interface OpenMeteoResponse {
     daily?: {

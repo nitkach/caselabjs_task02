@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 
 export const notFoundHandler = (_req: Request, _res: Response, next: NextFunction): void => {
-  next(new AppError(404, "Route not found"));
+    next(new AppError(404, "Route not found"));
 };

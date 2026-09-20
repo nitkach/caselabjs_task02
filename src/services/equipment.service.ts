@@ -6,7 +6,7 @@ import type {
 } from "../models/equipment.model.js";
 import { EquipmentRepository, equipmentRepository } from "../repositories/equipment.repository.js";
 import { MaintenanceRequestRepository, maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
-import { AppError } from "../utils/appError.js";
+import { AppError } from "../errors/appError.js";
 import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 import type { EquipmentListQuery } from "../schemas/list.schema.js";
 
