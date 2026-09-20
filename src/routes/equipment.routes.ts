@@ -10,6 +10,7 @@ import {
     getWeatherForecast,
 } from "../controllers/equipment.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
+import { asyncHandler } from "../middleware/asyncHandler.js";
 import {
     createEquipmentSchema,
     updateEquipmentSchema,
@@ -45,5 +46,7 @@ equipmentRouter.get(
 
 equipmentRouter.get(
     "/equipment/:id/weather",
-    getWeatherForecast
+    asyncHandler(getWeatherForecast)
 );
+//    req: Request<{ id: string; }, any, any, ParsedQs, Record<string, any>>
+// RequestHandler<ParamsDictionary, any, any, ParsedQs, Record<string, any>>

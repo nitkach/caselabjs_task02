@@ -1,6 +1,6 @@
 import { env } from "../config/env.js";
 import { equipmentService } from "./equipment.service.js";
-import { AppError } from "../errors/appError.js";
+import { ExternalServiceError } from "../errors/appError.js";
 
 interface OpenMeteoResponse {
     daily?: {
@@ -61,11 +61,11 @@ export class WeatherService {
                 signal: AbortSignal.timeout(env.requestTimeoutMs),
             });
         } catch {
-            throw new AppError(502, "Weather service is unavailable");
+            throw new ExternalServiceError("Weather service is unavailable");
         }
 
         if (!response.ok) {
-            throw new AppError(502, "Weather service returned an error");
+            throw new ExternalServiceError("Weather service returned an error");
         }
 
         let payload: OpenMeteoResponse;
@@ -73,7 +73,7 @@ export class WeatherService {
         try {
             payload = (await response.json()) as OpenMeteoResponse;
         } catch {
-            throw new AppError(502, "Weather service returned invalid data");
+            throw new ExternalServiceError("Weather service returned invalid data");
         }
 
         const daily = payload.daily;
@@ -85,7 +85,7 @@ export class WeatherService {
             !daily.precipitation_sum ||
             !daily.wind_speed_10m_max
         ) {
-            throw new AppError(502, "Weather service returned incomplete data");
+            throw new ExternalServiceError("Weather service returned incomplete data");
         }
 
         const times = daily.time;
@@ -106,7 +106,7 @@ export class WeatherService {
                 temperatureMax === undefined ||
                 temperatureMin === undefined
             ) {
-                throw new AppError(502, "Weather service returned incomplete data");
+                throw new ExternalServiceError("Weather service returned incomplete data");
             }
 
             return {

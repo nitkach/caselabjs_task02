@@ -9,12 +9,12 @@ import type {
 import {
     maintenanceRequestListQuerySchema,
 } from "../schemas/list.schema.js";
-import { AppError } from "../errors/appError.js";
+import { ValidationError } from "../errors/appError.js";
 
 export function listMaintenanceRequest(req: Request, res: Response): void {
     const parsed = maintenanceRequestListQuerySchema.safeParse(req.query);
     if (!parsed.success) {
-        throw new AppError(400, "Invalid request list query");
+        throw new ValidationError("Invalid request list query");
     }
 
     res.json({

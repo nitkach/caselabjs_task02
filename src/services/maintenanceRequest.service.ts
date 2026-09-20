@@ -11,7 +11,7 @@ import type {
     UpdateMaintenanceRequestStatusInput,
 } from "../schemas/maintenanceRequest.schema.js";
 import type { MaintenanceRequestListQuery } from "../schemas/list.schema.js";
-import { AppError } from "../errors/appError.js";
+import { ConflictError, NotFoundError } from "../errors/appError.js";
 
 export class MaintenanceRequestService {
     constructor(
@@ -58,7 +58,7 @@ export class MaintenanceRequestService {
         const maintenanceRequest = this.maintenanceRequestRepo.findById(id);
 
         if (!maintenanceRequest) {
-            throw new AppError(404, "Maintenance request not found");
+            throw new NotFoundError("Maintenance request not found");
         }
 
         return maintenanceRequest;
@@ -69,7 +69,7 @@ export class MaintenanceRequestService {
         const equipment = this.equipmentRepo.findById(input.equipmentId);
 
         if (!equipment) {
-            throw new AppError(404, "Equipment not found");
+            throw new NotFoundError("Equipment not found");
         }
 
         const now = new Date().toISOString();
@@ -95,7 +95,7 @@ export class MaintenanceRequestService {
         const equipment = this.equipmentRepo.findById(equipmentId);
 
         if (!equipment) {
-            throw new AppError(404, "Equipment not found");
+            throw new NotFoundError("Equipment not found");
         }
 
         return this.maintenanceRequestRepo.findByEquipmentId(equipmentId);
@@ -109,7 +109,7 @@ export class MaintenanceRequestService {
         });
 
         if (!updated) {
-            throw new AppError(404, "Maintenance request not found");
+            throw new NotFoundError("Maintenance request not found");
         }
 
         return updated;
@@ -131,7 +131,7 @@ export class MaintenanceRequestService {
         };
 
         if (!allowedTransitions[current.status].includes(input.status)) {
-            throw new AppError(409, "Invalid maintenance request status transition");
+            throw new ConflictError("Invalid maintenance request status transition");
         }
 
         const updated = this.maintenanceRequestRepo.update(id, {
@@ -140,7 +140,7 @@ export class MaintenanceRequestService {
         });
 
         if (!updated) {
-            throw new AppError(404, "Maintenance request not found");
+            throw new NotFoundError("Maintenance request not found");
         }
 
         return updated;
@@ -151,7 +151,7 @@ export class MaintenanceRequestService {
         const deletedRequest = this.maintenanceRequestRepo.delete(id);
 
         if (!deletedRequest) {
-            throw new AppError(404, "Maintenance request not found");
+            throw new NotFoundError("Maintenance request not found");
         }
 
         return deletedRequest;
