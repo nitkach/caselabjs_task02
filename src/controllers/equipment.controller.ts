@@ -3,6 +3,7 @@ import type { Request, Response } from "express";
 import type { CreateEquipmentInput, UpdateEquipmentInput } from "../models/equipment.model.js";
 import { equipmentService } from "../services/equipment.service.js";
 import { maintenanceRequestService } from "../services/maintenanceRequest.service.js";
+import { weatherService } from "../services/weather.service.js";
 
 export function listEquipment(_req: Request, res: Response): void {
     res.json({
@@ -58,4 +59,16 @@ export function getMaintenanceRequests(req: Request<{ id: string }>, res: Respon
         success: true,
         data: maintenanceRequests,
     })
+}
+
+export async function getWeatherForecast(
+    req: Request<{ id: string }>,
+    res: Response<unknown>,
+): Promise<void> {
+    const forecast = await weatherService.getForecastForEquipment(req.params.id);
+
+    res.status(200).json({
+        success: true,
+        data: forecast,
+    });
 }
