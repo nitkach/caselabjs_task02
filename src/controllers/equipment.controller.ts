@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 
 import type { CreateEquipmentInput, UpdateEquipmentInput } from "../models/equipment.model.js";
-import { equipmentService } from "../services/equipment.service.js";
+import { EquipmentService, equipmentService } from "../services/equipment.service.js";
 
 export function listEquipment(_req: Request, res: Response): void {
     res.json({
@@ -34,6 +34,17 @@ export function patchEquipment(
     res: Response<unknown>
 ): void {
     const equipment = equipmentService.update(req.params.id, req.body);
+
+    res.status(200).json({
+        success: true,
+        data: equipment,
+    });
+}
+
+export function deleteEquipment
+    (req: Request<{ id: string }>, res: Response<unknown>): void {
+
+    const equipment = equipmentService.delete(req.params.id);
 
     res.status(200).json({
         success: true,

@@ -5,6 +5,7 @@ import type {
     Equipment,
 } from "../models/equipment.model.js";
 import { equipmentRepository } from "../repositories/equipment.repository.js";
+import { maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
 import { AppError } from "../utils/appError.js";
 import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 
@@ -59,6 +60,15 @@ export class EquipmentService {
         }
 
         return updated;
+    }
+
+    delete(id: string): Equipment {
+        const result =
+
+
+        const equipment = this.repository.delete(id);
+
+        return equipment; // TODO
     }
 }
 

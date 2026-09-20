@@ -1,4 +1,5 @@
 import type { Equipment } from "../models/equipment.model.js";
+import type { EquipmentService } from "../services/equipment.service.js";
 
 export class EquipmentRepository {
     private readonly equipment = new Map<string, Equipment>();
@@ -37,6 +38,10 @@ export class EquipmentRepository {
 
         this.equipment.set(id, updated);
         return updated;
+    }
+
+    delete(id: string): Equipment | undefined {
+        return undefined;
     }
 }
 

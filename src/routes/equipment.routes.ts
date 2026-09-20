@@ -5,6 +5,7 @@ import {
     getEquipment,
     listEquipment,
     patchEquipment,
+    deleteEquipment,
 } from "../controllers/equipment.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
 import {
@@ -28,4 +29,9 @@ equipmentRouter.patch(
     "/equipment/:id",
     validateRequest(updateEquipmentSchema),
     patchEquipment,
+);
+
+equipmentRouter.delete(
+    "/equipment/:id",
+    deleteEquipment
 );
