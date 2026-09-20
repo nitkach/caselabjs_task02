@@ -1,8 +1,15 @@
 import type { MaintenanceRequest } from "../models/maintenanceRequest.model.js";
-import type { EquipmentService } from "../services/equipment.service.js";
 
 export class MaintenanceRequestRepository {
-    private readonly equipment = new Map<string, MaintenanceRequest>();
+    private readonly requests = new Map<string, MaintenanceRequest>();
+
+    hasOpenByEquipmentId(equipmentId: string): boolean {
+        return [...this.requests.values()].some(
+            (request) =>
+                request.equipmentId === equipmentId &&
+                (request.status === "new" || request.status === "in_progress"),
+        );
+    }
 }
 
 export const maintenanceRequestRepository = new MaintenanceRequestRepository();

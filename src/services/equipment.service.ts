@@ -4,14 +4,15 @@ import type {
     CreateEquipmentInput,
     Equipment,
 } from "../models/equipment.model.js";
-import { equipmentRepository } from "../repositories/equipment.repository.js";
-import { maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
+import { EquipmentRepository, equipmentRepository } from "../repositories/equipment.repository.js";
+import { MaintenanceRequestRepository, maintenanceRequestRepository } from "../repositories/maintenanceRequest.repository.js";
 import { AppError } from "../utils/appError.js";
 import type { UpdateEquipmentInput } from "../schemas/equipment.schema.js";
 
 export class EquipmentService {
     constructor(
-        private readonly repository = equipmentRepository,
+        private readonly repository: EquipmentRepository = equipmentRepository,
+        private readonly maintenanceRequestRepository: MaintenanceRequestRepository = maintenanceRequestRepository,
     ) { }
 
     findAll(): Equipment[] {
@@ -63,12 +64,17 @@ export class EquipmentService {
     }
 
     delete(id: string): Equipment {
-        const result =
+        const equipment = this.findById(id);
+        const hasOpenMaintenanceRequest =
+            this.maintenanceRequestRepository.hasOpenByEquipmentId(id);
 
+        if (hasOpenMaintenanceRequest) {
+            throw new AppError(409, "Equipment has open maintenance requests");
+        }
 
-        const equipment = this.repository.delete(id);
+        this.repository.delete(id);
 
-        return equipment; // TODO
+        return equipment;
     }
 }
 

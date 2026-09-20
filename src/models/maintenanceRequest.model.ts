@@ -20,8 +20,8 @@ export interface MaintenanceRequest {
     equipmentId: string
     title: string,
     description: string,
-    priority: string,
-    status: string,
+    priority: MaintenanceRequestPriority,
+    status: MaintenanceRequestStatus,
     plannedAt: string,
     createdAt: string,
     updatedAt: string,
