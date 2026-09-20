@@ -6,7 +6,7 @@ import {
     listEquipment,
     patchEquipment,
     deleteEquipment,
-    getMaintenanceRequests,
+    getMaintenanceRequestsByEquipmentId,
     getWeatherForecast,
 } from "../controllers/equipment.controller.js";
 import { validateRequest } from "../middleware/validateRequest.js";
@@ -40,7 +40,7 @@ equipmentRouter.delete(
 
 equipmentRouter.get(
     "/equipment/:id/requests",
-    getMaintenanceRequests
+    getMaintenanceRequestsByEquipmentId
 );
 
 equipmentRouter.get(

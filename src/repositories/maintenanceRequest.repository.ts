@@ -7,6 +7,10 @@ export class MaintenanceRequestRepository {
         return [...this.maintenanceRequests.values()];
     }
 
+    findById(id: string): MaintenanceRequest | undefined {
+        return this.maintenanceRequests.get(id);
+    }
+
     findByEquipmentId(equipmentId: string): MaintenanceRequest[] {
         return [...this.maintenanceRequests.values()].filter(
             (request) => request.equipmentId === equipmentId,
@@ -16,6 +20,27 @@ export class MaintenanceRequestRepository {
     create(request: MaintenanceRequest): MaintenanceRequest {
         this.maintenanceRequests.set(request.id, request);
         return request;
+    }
+
+    update(
+        id: string,
+        changes: Partial<MaintenanceRequest>,
+    ): MaintenanceRequest | undefined {
+        const current = this.maintenanceRequests.get(id);
+
+        if (!current) {
+            return undefined;
+        }
+
+        const updated = {
+            ...current,
+            ...changes,
+            id: current.id,
+            createdAt: current.createdAt,
+        };
+
+        this.maintenanceRequests.set(id, updated);
+        return updated;
     }
 
     hasOpenByEquipmentId(equipmentId: string): boolean {

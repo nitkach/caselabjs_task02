@@ -7,6 +7,13 @@ const prioritySchema = z.enum([
     "critical",
 ]);
 
+const statusSchema = z.enum([
+    "new",
+    "in_progress",
+    "done",
+    "rejected",
+]);
+
 export const createMaintenanceRequestSchema = z.object({
     equipmentId: z.uuid(),
 
@@ -27,4 +34,19 @@ export const createMaintenanceRequestSchema = z.object({
     plannedAt: z.iso.datetime().optional(),
 });
 
+export const updateMaintenanceRequestSchema = z.object({
+    title: createMaintenanceRequestSchema.shape.title.optional(),
+    description: createMaintenanceRequestSchema.shape.description,
+    priority: prioritySchema.optional(),
+    plannedAt: createMaintenanceRequestSchema.shape.plannedAt,
+});
+
+export const updateMaintenanceRequestStatusSchema = z.object({
+    status: statusSchema,
+});
+
 export type CreateMaintenanceRequestInput = z.infer<typeof createMaintenanceRequestSchema>;
+export type UpdateMaintenanceRequestInput = z.infer<typeof updateMaintenanceRequestSchema>;
+export type UpdateMaintenanceRequestStatusInput = z.infer<
+    typeof updateMaintenanceRequestStatusSchema
+>;

@@ -52,7 +52,7 @@ export function deleteEquipment(req: Request<{ id: string }>, res: Response<unkn
     });
 }
 
-export function getMaintenanceRequests(req: Request<{ id: string }>, res: Response<unknown>): void {
+export function getMaintenanceRequestsByEquipmentId(req: Request<{ id: string }>, res: Response<unknown>): void {
     const maintenanceRequests = maintenanceRequestService.findByEquipmentId(req.params.id);
 
     res.status(200).json({
