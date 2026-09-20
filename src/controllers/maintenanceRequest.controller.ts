@@ -6,11 +6,20 @@ import type {
     UpdateMaintenanceRequestInput,
     UpdateMaintenanceRequestStatusInput,
 } from "../schemas/maintenanceRequest.schema.js";
+import {
+    maintenanceRequestListQuerySchema,
+} from "../schemas/list.schema.js";
+import { AppError } from "../utils/appError.js";
 
-export function listMaintenanceRequest(_req: Request, res: Response): void {
+export function listMaintenanceRequest(req: Request, res: Response): void {
+    const parsed = maintenanceRequestListQuerySchema.safeParse(req.query);
+    if (!parsed.success) {
+        throw new AppError(400, "Invalid request list query");
+    }
+
     res.json({
         success: true,
-        data: maintenanceRequestService.findAll(),
+        ...maintenanceRequestService.findAll(parsed.data),
     });
 };
 
